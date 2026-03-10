@@ -15,12 +15,14 @@
     var lats   = oreData.map(function(d) { return d["Широта"];  });
     var lons   = oreData.map(function(d) { return d["Долгота"]; });
     var depths = oreData.map(function(d) { return d["Глубина"]; });
-    var cus    = oreData.map(function(d) { return d["Au_EQ_г/т"];    });
+    var cus    = oreData.map(function(d) { return d["Au_EQ_г/т"]; });
     var pitLats   = pitData.map(function(d) { return d["Широта"];  });
     var pitLons   = pitData.map(function(d) { return d["Долгота"]; });
     var pitDepths = pitData.map(function(d) { return d["Глубина"]; });
     var depthMin = Math.min(Math.min.apply(null, depths), Math.min.apply(null, pitDepths));
     var depthMax = Math.max(Math.max.apply(null, depths), Math.max.apply(null, pitDepths));
+    var cuMin = Math.min.apply(null, cus);
+    var cuMax = Math.max.apply(null, cus);
 
     var oreTrace = {
       type: 'scatter3d',
@@ -32,6 +34,8 @@
       marker: {
         size: 2,
         color: cus,
+        cmin: cuMin,
+        cmax: cuMax,
         colorscale: [
           [0,    '#f7fbff'],
           [0.5,  '#6baed6'],
@@ -67,6 +71,7 @@
     };
 
     var layout = {
+      showlegend: false,
       paper_bgcolor: '#0d1117',
       scene: {
         bgcolor: '#0d1117',
@@ -89,15 +94,7 @@
         }
       },
       margin: { l: 0, r: 0, t: 0, b: 0 },
-      font: { color: '#ffffff', family: 'Segoe UI', size: 10 },
-      legend: {
-        font: { color: '#ffffff', family: 'Segoe UI', size: 10 },
-        bgcolor: '#0d1117',
-        x: 0,
-        y: 0.85,
-        xanchor: 'left',
-        yanchor: 'top'
-      }
+      font: { color: '#ffffff', family: 'Segoe UI', size: 10 }
     };
 
     Plotly.newPlot('plot', [pitTrace, oreTrace], layout, { responsive: true });
