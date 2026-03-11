@@ -5,25 +5,25 @@
   <link rel='preconnect' href='https://yourusername.github.io'>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly-gl3d.min.js'></script>
   <style>
-    body { margin:0; padding:0; background:#0d1117; }
+    body { margin:0; padding:0; background:#FFFEF5; }
 
     #loader {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #ffffff;
+      color: #808080;
       font-family: 'Segoe UI', sans-serif;
       font-size: 13px;
-      opacity: 0.6;
+      opacity: 0.8;
       z-index: 999;
     }
 
     .spinner {
       width: 28px;
       height: 28px;
-      border: 3px solid #333;
-      border-top: 3px solid #6baed6;
+      border: 3px solid #dddddd;
+      border-top: 3px solid #808080;
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
       margin: 0 auto 10px auto;
@@ -113,9 +113,11 @@
           [1,    '#03051a']
         ],
         colorbar: {
-          title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10 }, side: 'left' },
-          tickfont: { color: '#000000', family: 'Segoe UI', size: 9 },
-          titlefont: { color: '#000000', family: 'Segoe UI', size: 10 },
+          title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10, color: '#808080' }, side: 'left' },
+          tickfont: { color: '#808080', family: 'Segoe UI', size: 9 },
+          titlefont: { color: '#808080', family: 'Segoe UI', size: 10 },
+          outlinewidth: 0,
+          borderwidth: 0,
           x: 0.90,
           y: 0.5,
           len: 0.6,
@@ -163,7 +165,7 @@
         }
       },
       margin: { l: 0, r: 0, t: 0, b: 0 },
-      font: { color: '#ffffff', family: 'Segoe UI', size: 10 }
+      font: { color: '#808080', family: 'Segoe UI', size: 10 }
     };
 
     // Hide loader and render
