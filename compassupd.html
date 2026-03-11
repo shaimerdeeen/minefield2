@@ -5,25 +5,25 @@
   <link rel='preconnect' href='https://yourusername.github.io'>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly-gl3d.min.js'></script>
   <style>
-    body { margin:0; padding:0; background:#FFFEF5; }
+    body { margin:0; padding:0; background:#0d1117; }
 
     #loader {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #808080;
+      color: #ffffff;
       font-family: 'Segoe UI', sans-serif;
-      font-size: 12px;
-      opacity: 0.8;
+      font-size: 13px;
+      opacity: 0.6;
       z-index: 999;
     }
 
     .spinner {
       width: 28px;
       height: 28px;
-      border: 3px solid #dddddd;
-      border-top: 3px solid #808080;
+      border: 3px solid #333;
+      border-top: 3px solid #6baed6;
       border-radius: 50%;
       animation: spin 0.9s linear infinite;
       margin: 0 auto 10px auto;
@@ -60,7 +60,7 @@
 
 <div id='compass'>
   <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
-    <circle cx='50' cy='50' r='46' fill='none' stroke='#444' stroke-width='1.5'/>
+    <circle cx='50' cy='50' r='46' fill='none' stroke='#444' stroke-width='2'/>
     <circle cx='50' cy='50' r='4' fill='#888'/>
     <line x1='50' y1='6'  x2='50' y2='16' stroke='#666' stroke-width='1.5'/>
     <line x1='50' y1='84' x2='50' y2='94' stroke='#666' stroke-width='1.5'/>
@@ -113,11 +113,9 @@
           [1,    '#03051a']
         ],
         colorbar: {
-          title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10, color: '#000000', weight: 600 }, side: 'left' },
-          tickfont: { color: '#000000', family: 'Segoe UI', size: 10 },
-          titlefont: { color: '#000000', family: 'Segoe UI', size: 10 },
-          outlinewidth: 0.5,
-          borderwidth: 0,
+          title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10 }, side: 'left' },
+          tickfont: { color: '#ffffff', family: 'Segoe UI', size: 9 },
+          titlefont: { color: '#ffffff', family: 'Segoe UI', size: 10 },
           x: 0.90,
           y: 0.5,
           len: 0.6,
@@ -136,36 +134,36 @@
       z: pitDepths,
       marker: {
         size: 1.5,
-        color: '#CD7F32',
+        color: '#ff9900',
         opacity: 0.4
       }
     };
 
     var layout = {
       showlegend: false,
-      paper_bgcolor: '#FFFEF5',
+      paper_bgcolor: '#0d1117',
       scene: {
-        bgcolor: '#FFFEF5',
+        bgcolor: '#0d1117',
         xaxis: {
-          title: { text: 'Долгота', font: { family: 'Segoe UI', size: 10, color: '#808080', weight: 600 } },
-          color: '#808080',
+          title: { text: 'Долгота', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
           tickfont: { family: 'Segoe UI', size: 9 }
         },
         yaxis: {
-          title: { text: 'Широта', font: { family: 'Segoe UI', size: 10, color: '#808080', weight: 600 } },
-          color: '#808080',
+          title: { text: 'Широта', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
           tickfont: { family: 'Segoe UI', size: 9 }
         },
         zaxis: {
-          title: { text: 'Глубина (м)', font: { family: 'Segoe UI', size: 10, color: '#808080', weight: 600 } },
-          color: '#808080',
+          title: { text: 'Глубина (м)', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
           tickfont: { family: 'Segoe UI', size: 9 },
           autorange: false,
           range: [depthMin, depthMax]
         }
       },
       margin: { l: 0, r: 0, t: 0, b: 0 },
-      font: { color: '#808080', family: 'Segoe UI', size: 10 }
+      font: { color: '#ffffff', family: 'Segoe UI', size: 10 }
     };
 
     // Hide loader and render
