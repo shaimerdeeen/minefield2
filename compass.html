@@ -156,13 +156,25 @@
     var needle  = document.getElementById('needle');
 
     plotDiv.on('plotly_relayout', function(eventData) {
-      var scene = plotDiv._fullLayout.scene._camera;
-      if (!scene) return;
+      try {
+        var eye = null;
 
-      var eye = scene.eye;
-      var azimuth = Math.atan2(eye.x, eye.y) * (180 / Math.PI);
+        // Try reading from eventData directly first
+        if (eventData['scene.camera']) {
+          eye = eventData['scene.camera'].eye;
+        }
 
-      needle.setAttribute('transform', 'rotate(' + azimuth + ', 50, 50)');
+        // Fallback to full layout
+        if (!eye) {
+          var cam = plotDiv._fullLayout.scene.camera;
+          if (cam && cam.eye) eye = cam.eye;
+        }
+
+        if (!eye) return;
+
+        var azimuth = Math.atan2(eye.x, eye.y) * (180 / Math.PI);
+        needle.setAttribute('transform', 'rotate(' + azimuth + ', 50, 50)');
+      } catch(e) {}
     });
   });
 </script>
