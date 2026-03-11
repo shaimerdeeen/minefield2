@@ -90,7 +90,7 @@
     var depthMin = Math.min(Math.min.apply(null, depths), Math.min.apply(null, pitDepths));
     var depthMax = Math.max(Math.max.apply(null, depths), Math.max.apply(null, pitDepths));
     var cuMin = Math.min.apply(null, cus);
-    var cuMax = Math.max.apply(null, cus);
+    var cuMax = 10.0;
 
     var oreTrace = {
       type: 'scatter3d',
@@ -105,12 +105,17 @@
         cmin: cuMin,
         cmax: cuMax,
         colorscale: [
-          [0,    '#f7fbff'],
-          [0.5,  '#6baed6'],
-          [0.75, '#2171b5'],
-          [0.9,  '#08519c'],
-          [0.95, '#08306b'],
-          [1,    '#03051a']
+          [0,    '#ffffff'],
+          [0.1,  '#caf0f8'],
+          [0.2, '#ade8f4'],
+          [0.3,  '#90e0ef'],
+          [0.4, '#48cae4'],
+          [0.5,  '#00b4d8'],
+          [0.6, '#0096c7'],
+          [0.7,  '#0096c7'],
+          [0.8,  '#0077b6'],
+          [0.9, '#023e8a'],
+          [1,    '#03045e']
         ],
         colorbar: {
           title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10 }, side: 'left' },
