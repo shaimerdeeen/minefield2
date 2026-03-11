@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel='preconnect' href='https://cdnjs.cloudflare.com'>
+  <link rel='preconnect' href='https://yourusername.github.io'>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly-gl3d.min.js'></script>
+  <style>
+    body { margin:0; padding:0; background:#0d1117; }
+
+    #loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 13px;
+      opacity: 0.6;
+      z-index: 999;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid #333;
+      border-top: 3px solid #6baed6;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+      margin: 0 auto 10px auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #compass {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      width: 70px;
+      height: 70px;
+      z-index: 999;
+      opacity: 0.85;
+    }
+
+    #compass svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id='loader'>
+  <div class='spinner'></div>
+  Loading...
+</div>
+
+<div id='plot' style='width:100%;height:100vh;'></div>
+
+<div id='compass'>
+  <svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'>
+    <circle cx='50' cy='50' r='46' fill='none' stroke='#444' stroke-width='2'/>
+    <circle cx='50' cy='50' r='4' fill='#888'/>
+    <line x1='50' y1='6'  x2='50' y2='16' stroke='#666' stroke-width='1.5'/>
+    <line x1='50' y1='84' x2='50' y2='94' stroke='#666' stroke-width='1.5'/>
+    <line x1='6'  y1='50' x2='16' y2='50' stroke='#666' stroke-width='1.5'/>
+    <line x1='84' y1='50' x2='94' y2='50' stroke='#666' stroke-width='1.5'/>
+    <g id='needle'>
+      <polygon points='50,8 45,50 50,44 55,50' fill='#e63946'/>
+      <polygon points='50,92 45,50 50,56 55,50' fill='#aaaaaa'/>
+    </g>
+  </svg>
+</div>
+
+<script>
+  Promise.all([
+    fetch('orebody.json').then(r => r.json()),
+    fetch('pit.json').then(r => r.json())
+  ]).then(function(results) {
+    var oreData = results[0];
+    var pitData = results[1];
+    var lats   = oreData.map(function(d) { return d["Широта"];  });
+    var lons   = oreData.map(function(d) { return d["Долгота"]; });
+    var depths = oreData.map(function(d) { return d["Глубина"]; });
+    var cus    = oreData.map(function(d) { return d["AuEQ"]; });
+    var pitLats   = pitData.map(function(d) { return d["Широта"];  });
+    var pitLons   = pitData.map(function(d) { return d["Долгота"]; });
+    var pitDepths = pitData.map(function(d) { return d["Глубина"]; });
+    var depthMin = Math.min(Math.min.apply(null, depths), Math.min.apply(null, pitDepths));
+    var depthMax = Math.max(Math.max.apply(null, depths), Math.max.apply(null, pitDepths));
+    var cuMin = Math.min.apply(null, cus);
+    var cuMax = Math.max.apply(null, cus);
+
+    var oreTrace = {
+      type: 'scatter3d',
+      mode: 'markers',
+      name: 'Ore Body',
+      x: lons,
+      y: lats,
+      z: depths,
+      marker: {
+        size: 2,
+        color: cus,
+        cmin: cuMin,
+        cmax: cuMax,
+        colorscale: [
+          [0,    '#f7fbff'],
+          [0.5,  '#6baed6'],
+          [0.75, '#2171b5'],
+          [0.9,  '#08519c'],
+          [0.95, '#08306b'],
+          [1,    '#03051a']
+        ],
+        colorbar: {
+          title: { text: 'AuEQ, г/т', font: { family: 'Segoe UI', size: 10 }, side: 'left' },
+          tickfont: { color: '#ffffff', family: 'Segoe UI', size: 9 },
+          titlefont: { color: '#ffffff', family: 'Segoe UI', size: 10 },
+          x: 0.90,
+          y: 0.5,
+          len: 0.6,
+          yanchor: 'middle'
+        },
+        opacity: 0.70
+      }
+    };
+
+    var pitTrace = {
+      type: 'scatter3d',
+      mode: 'markers',
+      name: 'Pit Boundary',
+      x: pitLons,
+      y: pitLats,
+      z: pitDepths,
+      marker: {
+        size: 1.5,
+        color: '#ff9900',
+        opacity: 0.4
+      }
+    };
+
+    var layout = {
+      showlegend: false,
+      paper_bgcolor: '#0d1117',
+      scene: {
+        bgcolor: '#0d1117',
+        xaxis: {
+          title: { text: 'Долгота', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
+          tickfont: { family: 'Segoe UI', size: 9 }
+        },
+        yaxis: {
+          title: { text: 'Широта', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
+          tickfont: { family: 'Segoe UI', size: 9 }
+        },
+        zaxis: {
+          title: { text: 'Глубина (м)', font: { family: 'Segoe UI', size: 10 } },
+          color: '#ffffff',
+          tickfont: { family: 'Segoe UI', size: 9 },
+          autorange: false,
+          range: [depthMin, depthMax]
+        }
+      },
+      margin: { l: 0, r: 0, t: 0, b: 0 },
+      font: { color: '#ffffff', family: 'Segoe UI', size: 10 }
+    };
+
+    // Hide loader and render
+    document.getElementById('loader').style.display = 'none';
+    Plotly.newPlot('plot', [pitTrace, oreTrace], layout, { responsive: true });
+
+    // Compass
+    var plotDiv = document.getElementById('plot');
+    var needle  = document.getElementById('needle');
+
+    function updateCompass(eye) {
+      if (!eye) return;
+      var azimuth = Math.atan2(eye.x, eye.y) * (180 / Math.PI);
+      needle.setAttribute('transform', 'rotate(' + azimuth + ', 50, 50)');
+    }
+
+    plotDiv.on('plotly_afterplot', function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    });
+
+    plotDiv.on('plotly_relayout', function(eventData) {
+      try {
+        var eye = null;
+        if (eventData['scene.camera']) {
+          eye = eventData['scene.camera'].eye;
+        }
+        if (!eye) {
+          var cam = plotDiv._fullLayout.scene.camera;
+          if (cam && cam.eye) eye = cam.eye;
+        }
+        updateCompass(eye);
+      } catch(e) {}
+    });
+
+    setTimeout(function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    }, 2000);
+
+    setTimeout(function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    }, 4000);
+
+  });
+</script>
+</body>
+</html>
