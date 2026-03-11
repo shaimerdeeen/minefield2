@@ -151,29 +151,36 @@
 
     Plotly.newPlot('plot', [pitTrace, oreTrace], layout, { responsive: true });
 
-    // Compass update on camera rotation
+// Compass update on camera rotation
     var plotDiv = document.getElementById('plot');
     var needle  = document.getElementById('needle');
 
+    function updateCompass(eye) {
+      if (!eye) return;
+      var azimuth = Math.atan2(eye.x, eye.y) * (180 / Math.PI);
+      needle.setAttribute('transform', 'rotate(' + azimuth + ', 50, 50)');
+    }
+
+    // Set compass on initial render
+    plotDiv.on('plotly_afterplot', function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    });
+
+    // Update compass on every camera move
     plotDiv.on('plotly_relayout', function(eventData) {
       try {
         var eye = null;
-
-        // Try reading from eventData directly first
         if (eventData['scene.camera']) {
           eye = eventData['scene.camera'].eye;
         }
-
-        // Fallback to full layout
         if (!eye) {
           var cam = plotDiv._fullLayout.scene.camera;
           if (cam && cam.eye) eye = cam.eye;
         }
-
-        if (!eye) return;
-
-        var azimuth = Math.atan2(eye.x, eye.y) * (180 / Math.PI);
-        needle.setAttribute('transform', 'rotate(' + azimuth + ', 50, 50)');
+        updateCompass(eye);
       } catch(e) {}
     });
   });
