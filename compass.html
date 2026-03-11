@@ -169,6 +169,21 @@
       } catch(e) {}
     });
 
+    // Delayed fallback for Power BI iframe timing
+    setTimeout(function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    }, 2000);
+
+    setTimeout(function() {
+      try {
+        var cam = plotDiv._fullLayout.scene.camera;
+        if (cam && cam.eye) updateCompass(cam.eye);
+      } catch(e) {}
+    }, 4000);
+
     // Update compass on every camera move
     plotDiv.on('plotly_relayout', function(eventData) {
       try {
