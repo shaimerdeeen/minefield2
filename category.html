@@ -91,8 +91,8 @@
     var pitLons   = pitData.map(function(d) { return d["Долгота"]; });
     var pitDepths = pitData.map(function(d) { return d["Глубина"]; });
 
-    var depthMin = Math.min(Math.min.apply(null, depths), Math.min.apply(null, pitDepths));
-    var depthMax = Math.max(Math.max.apply(null, depths), Math.max.apply(null, pitDepths));
+    var depthMin = depths.concat(pitDepths).reduce(function(a, b) { return Math.min(a, b); }, Infinity);
+    var depthMax = depths.concat(pitDepths).reduce(function(a, b) { return Math.max(a, b); }, -Infinity);
 
     // Split into two traces by category for discrete legend
     var ind = { lats: [], lons: [], depths: [] };
