@@ -82,10 +82,9 @@
     var catData  = results[0].concat(results[1]);
     var pitData  = results[2];
 
-    var lats   = catData.map(function(d) { return d["Широта"];     });
-    var lons   = catData.map(function(d) { return d["Долгота"];    });
-    var depths = catData.map(function(d) { return d["Глубина"];    });
-    var cats   = catData.map(function(d) { return d["Категория"]; });
+    var lats   = catData.map(function(d) { return d["Широта"];    });
+    var lons   = catData.map(function(d) { return d["Долгота"];   });
+    var depths = catData.map(function(d) { return d["Глубина"];   });
 
     var pitLats   = pitData.map(function(d) { return d["Широта"];  });
     var pitLons   = pitData.map(function(d) { return d["Долгота"]; });
@@ -94,7 +93,6 @@
     var depthMin = depths.concat(pitDepths).reduce(function(a, b) { return Math.min(a, b); }, Infinity);
     var depthMax = depths.concat(pitDepths).reduce(function(a, b) { return Math.max(a, b); }, -Infinity);
 
-    // Split into two traces by category for discrete legend
     var ind = { lats: [], lons: [], depths: [] };
     var inf = { lats: [], lons: [], depths: [] };
 
@@ -113,6 +111,7 @@
       type: 'scatter3d',
       mode: 'markers',
       name: 'Indicated',
+      showlegend: false,
       x: ind.lons,
       y: ind.lats,
       z: ind.depths,
@@ -127,6 +126,7 @@
       type: 'scatter3d',
       mode: 'markers',
       name: 'Inferred',
+      showlegend: false,
       x: inf.lons,
       y: inf.lats,
       z: inf.depths,
@@ -150,6 +150,27 @@
         color: '#ff9900',
         opacity: 0.5
       }
+    };
+
+    // Dummy traces for hardcoded legend entries
+    var legendInd = {
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Indicated',
+      x: [null],
+      y: [null],
+      marker: { size: 10, color: '#E66C37' },
+      showlegend: true
+    };
+
+    var legendInf = {
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Inferred',
+      x: [null],
+      y: [null],
+      marker: { size: 10, color: '#E8D166' },
+      showlegend: true
     };
 
     var layout = {
@@ -189,9 +210,8 @@
       font: { color: '#ffffff', family: 'Segoe UI', size: 10 }
     };
 
-    // Hide loader and render
     document.getElementById('loader').style.display = 'none';
-    Plotly.newPlot('plot', [pitTrace, indicatedTrace, inferredTrace], layout, { responsive: true });
+    Plotly.newPlot('plot', [pitTrace, indicatedTrace, inferredTrace, legendInd, legendInf], layout, { responsive: true });
 
     // Compass
     var plotDiv = document.getElementById('plot');
